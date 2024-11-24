@@ -34,10 +34,10 @@ export function PomodoroTimer(props: Props): JSX.Element {
 
   useInterval(
     () => {
-      setMainTime(mainTime - 1);
+      if (mainTime > 0) setMainTime(mainTime - 1);
       if (working) setFullWorkingTime(fullWorkingTime + 1);
     },
-    timeCounting ? 1000 : null
+    timeCounting && mainTime > 0 ? 1000 : null
   );
 
   const configureWork = useCallback(() => {
@@ -45,7 +45,7 @@ export function PomodoroTimer(props: Props): JSX.Element {
     setWorking(true);
     setResting(false);
     setMainTime(props.pomodoroTime);
-    audioStartWorking.play();
+    audioStartWorking?.play();
   }, [audioStartWorking, props.pomodoroTime]);
 
   const configureRest = useCallback(
@@ -59,7 +59,7 @@ export function PomodoroTimer(props: Props): JSX.Element {
       } else {
         setMainTime(props.shortRestTime);
       }
-      audioStopWorking.play();
+      audioStopWorking?.play();
     },
     [audioStopWorking, props.longRestTime, props.shortRestTime]
   );
@@ -68,23 +68,23 @@ export function PomodoroTimer(props: Props): JSX.Element {
     if (working) document.body.classList.add("working");
     if (resting) document.body.classList.remove("working");
 
-    if (mainTime > 0) return;
+    if (mainTime <= 0) {
+      if (working && cyclesQtdManager.length > 0) {
+        configureRest(false);
+        setCyclesQtdManager(cyclesQtdManager.filter((v, i) => i !== 0));
+      } else if (working && cyclesQtdManager.length <= 0) {
+        configureRest(true);
+        setCyclesQtdManager(new Array(props.cycles - 1).fill(true));
+        setCompletedCycles(completedCycles + 1);
+      }
 
-    if (working && cyclesQtdManager.length > 0) {
-      configureRest(false);
-      cyclesQtdManager.pop();
-    } else if (working && cyclesQtdManager.length <= 0) {
-      configureRest(true);
-      setCyclesQtdManager(new Array(props.cycles - 1).fill(true));
-      setCompletedCycles(completedCycles + 1);
-    }
+      if (resting) {
+        configureWork();
+      }
 
-    if (resting) {
-      configureWork();
-    }
-
-    if (working) {
-      setNumberOfPomodoros(numberOfPomodoros + 1);
+      if (working) {
+        setNumberOfPomodoros(numberOfPomodoros + 1);
+      }
     }
   }, [
     working,

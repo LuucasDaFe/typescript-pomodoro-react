@@ -1,2 +1,6 @@
-export const zeroLeft = (n: number): string =>
-  Math.floor(n).toString().padStart(2, "0");
+export const zeroLeft = (num: number | null | undefined): string => {
+  if (num == null) {
+    throw new Error("The input number must not be null or undefined.");
+  }
+  return Math.floor(num).toString().padStart(2, "0");
+};
