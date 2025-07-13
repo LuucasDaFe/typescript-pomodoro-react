@@ -1,46 +1,144 @@
-# Getting Started with Create React App
+# TypeScript Pomodoro React Application
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Project Overview
+This is a React application built with TypeScript that implements the Pomodoro Technique, a time management method developed by Francesco Cirillo. The technique uses a timer to break work into intervals, traditionally 25 minutes in length, separated by short breaks. The application allows users to:
+- Start work sessions
+- Take short breaks after each work session
+- Take longer breaks after a specified number of cycles
+- Track completed cycles, total working time, and number of pomodoros completed
 
-## Available Scripts
+## Technologies Used
+- **React**: Front-end library for building user interfaces
+- **TypeScript**: Typed superset of JavaScript
+- **CSS**: For styling components
+- **HTML**: Structure of the application
+- **Audio**: Audio notifications for session starts and ends
 
-In the project directory, you can run:
+## Application Architecture
 
-### `npm start`
+### Components
+1. **App.tsx**: Main application component that renders the PomodoroTimer component with configuration props
+2. **PomodoroTimer.tsx**: Core component that manages the timer logic, state, and renders the UI
+3. **Timer.tsx**: Displays the current countdown time in minutes and seconds
+4. **Button.tsx**: Reusable button component with configurable text, click handler, and optional CSS class
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+### Hooks
+1. **useInterval.tsx**: Custom hook to handle interval timing with cleanup functionality
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+### Utils
+1. **seconds-to-minutes.ts**: Converts seconds to a formatted minutes:seconds string (MM:SS)
+2. **seconds-to-time.ts**: Converts seconds to a formatted hours:minutes:seconds string (HH:MM:SS)
+3. **zero-left.tsx**: Ensures numbers are displayed with leading zeros for proper time formatting
 
-### `npm test`
+### State Management
+The application uses React's built-in state management (useState and useEffect hooks) to track:
+- Current timer value (mainTime)
+- Whether the timer is counting (timeCounting)
+- Current mode (working, resting)
+- Completed cycles and pomodoros
+- Total working time
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Features
 
-### `npm run build`
+### 1. Configurable Timer Settings
+The application allows configuration of:
+- Work session duration (pomodoroTime)
+- Short rest duration (shortRestTime)
+- Long rest duration (longRestTime)
+- Number of work sessions before a long break (cycles)
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### 2. Session Management
+- Start work sessions
+- Start rest sessions (short or long)
+- Pause and resume timer
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### 3. Visual Indicators
+- Background color changes based on the current mode (green for rest, red for work)
+- Timer display with minutes:seconds format
+- Text indicator showing current mode ("Working" or "Resting")
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### 4. Audio Notifications
+- Bell sound when starting a work session
+- Different bell sound when finishing a work session
 
-### `npm run eject`
+### 5. Statistics Tracking
+- Number of completed cycles
+- Total working time (displayed in HH:MM:SS format)
+- Number of completed pomodoros (work sessions)
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+## How to Use
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### Installation
+1. Clone the repository
+2. Navigate to the project directory
+3. Install dependencies:
+   ```
+   npm install
+   ```
+   or
+   ```
+   yarn install
+   ```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+### Running the Application
+1. Start the development server:
+   ```
+   npm start
+   ```
+   or
+   ```
+   yarn start
+   ```
+2. Open your browser and navigate to `http://localhost:3000`
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+### Using the Timer
+1. The default configuration is set in App.tsx:
+   - Work session: 10 seconds (for demonstration purposes, typically 25 minutes)
+   - Short break: 2 seconds (typically 5 minutes)
+   - Long break: 5 seconds (typically 15-30 minutes)
+   - Cycles before long break: 4
 
-## Learn More
+2. Use the buttons to control the timer:
+   - "Work": Start a work session
+   - "Rest": Start a rest session
+   - "Pause"/"Play": Pause or resume the current session
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+3. The application will automatically:
+   - Switch from work to short rest after completing a work session
+   - Switch from rest to work after completing a rest session
+   - Give a long rest after completing the configured number of cycles
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+4. Track your progress with the statistics at the bottom of the application
+
+## Customization
+To change the default timer settings, modify the props passed to the PomodoroTimer component in App.tsx:
+
+```jsx
+<PomodoroTimer
+  pomodoroTime={1500} // 25 minutes in seconds
+  shortRestTime={300} // 5 minutes in seconds
+  longRestTime={900} // 15 minutes in seconds
+  cycles={4} // Number of pomodoros before a long break
+/>
+```
+
+## Code Quality and Best Practices
+The application demonstrates several good software engineering practices:
+- Type safety with TypeScript
+- Component-based architecture
+- Custom hooks for reusable logic
+- Clean separation of concerns
+- Error handling in utility functions
+- Responsive design
+- Clean, maintainable code structure
+
+## Potential Enhancements
+1. Add settings menu to allow users to configure times without code changes
+2. Add task management functionality
+3. Implement user profiles and data persistence
+4. Add more themes/color schemes
+5. Implement sound customization
+6. Add keyboard shortcuts
+7. Create mobile responsive design improvements
+
+This Pomodoro application provides a solid foundation for time management using the Pomodoro Technique and can be extended with additional features as needed.
